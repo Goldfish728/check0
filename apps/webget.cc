@@ -7,10 +7,28 @@
 
 using namespace std;
 
+// void get_URL( const string& host, const string& path )
+// {
+//   cerr << "Function called: get_URL(" << host << ", " << path << ")\n";
+//   cerr << "Warning: get_URL() has not been implemented yet.\n";
+// }
+
 void get_URL( const string& host, const string& path )
 {
-  cerr << "Function called: get_URL(" << host << ", " << path << ")\n";
-  cerr << "Warning: get_URL() has not been implemented yet.\n";
+  TCPSocket s;
+  s.connect(Address(host, "http"));
+  s.write("GET " + path + " HTTP/1.1\r\n");
+  s.write("Host: " + host + "\r\n");
+  s.write("Connection: close\r\n");
+  s.write("\r\n"); 
+  s.shutdown(SHUT_WR);
+  std::string buffer;
+  while(!s.eof())
+  {
+    s.read(buffer);
+    cout <<  buffer;      
+  }
+  s.close();
 }
 
 int main( int argc, char* argv[] )
